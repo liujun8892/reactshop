@@ -6,10 +6,11 @@
 exact :完全匹配路由 
 * */
 import React from 'react';
-import  {HashRouter as Router,Route,Switch}  from  'react-router-dom';
+import {HashRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
 //import {PrivateRoute} from './routes/private';
+import config from "./assets/js/conf/config";
 import asyncComponents from './components/async/AsyncComponent';
-const IndexComponent=asyncComponents(()=>import('./pages/home/index/index'));
+const HomeComponent=asyncComponents(()=>import('./pages/home/home/index'));
 export default class RouterComponent extends React.Component{
     render(){
         return(
@@ -17,7 +18,8 @@ export default class RouterComponent extends React.Component{
                 <Router>
                     <React.Fragment>
                         <Switch>
-                            <Route exact path="/" component={IndexComponent} ></Route>
+                            <Route  path={config.path + 'home'}  component={HomeComponent} ></Route>
+                            <Redirect to={config.path  + 'home/index'}></Redirect>
                         </Switch>
                     </React.Fragment>
                 </Router>

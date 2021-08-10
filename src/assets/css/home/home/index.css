@@ -1,0 +1,63 @@
+.footer-nav {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2.5rem;
+    background-color: #fff;
+    z-index: 10;
+    box-shadow: 0 0 10px rgba(239,239,239,1);
+}
+.footer-nav .footer-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.footer-nav .footer-nav-item .footer-nav-item-icon {
+    width: 1.4rem;
+    height: 1.4rem;
+}
+
+.footer-nav .footer-nav-item .footer-nav-item-title {
+    font-size: 0.6rem;
+}
+
+.footer-nav .footer-nav-item .footer-nav-item-title.active {
+    color: #eb1625;
+}
+
+.footer-nav .footer-nav-item .footer-nav-item-icon.home {
+    background: url("../../../images/common/home1.png");
+    background-size: 100% 100%;
+}
+
+.footer-nav .footer-nav-item .footer-nav-item-icon.home.active {
+    background: url("../../../images/common/home2.png");
+    background-size: 100% 100%;
+}
+
+.footer-nav .footer-nav-item .footer-nav-item-icon.cart {
+    background: url("../../../images/common/cart1.png");
+    background-size: 100% 100%;
+}
+
+.footer-nav .footer-nav-item .footer-nav-item-icon.cart.active {
+    background: url("../../../images/common/cart2.png");
+    background-size: 100% 100%;
+}
+
+.footer-nav .footer-nav-item .footer-nav-item-icon.my {
+    background: url("../../../images/common/my1.png");
+    background-size: 100% 100%;
+}
+
+.footer-nav .footer-nav-item .footer-nav-item-icon.my.active {
+    background: url("../../../images/common/my2.png");
+    background-size: 100% 100%;
+}
+
+
