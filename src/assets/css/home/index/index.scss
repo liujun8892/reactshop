@@ -1,0 +1,263 @@
+#homeIndex {
+  div {
+    box-sizing: border-box;
+  }
+
+  margin-bottom: 3rem;
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 10;
+    height: 2.5rem;
+    background: linear-gradient(rgba(1, 1, 1, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
+    padding: 0 0.75rem;
+    .category {
+      width: 1.5rem;
+      height: 1.5rem;
+      background: url("../../../images/common/class.png");
+      background-size: 100% 100%;
+    }
+    .search-container {
+      display: flex;
+      align-items: center;
+      margin: 0 0.5rem;
+      height: 1.3rem;
+      flex: 1;
+      background:  rgba(255,255,255,0.6);
+      border-radius: 0.25rem;
+      .search-btn {
+        margin: 0 0.25rem 0 0.25rem;
+        width: 1.1rem;
+        height: 1.1rem;
+        background: url("../../../images/common/search.png");
+        background-size: 100% 100%;
+      }
+      .search-holder {
+        font-size: 0.7rem;
+        color: #ffffff;
+      }
+    }
+    .login-container {
+      .un-login {
+        font-size: 0.8rem;
+        color: #ffffff;
+      }
+    }
+  }
+  .header.red-bg {
+    background: linear-gradient(rgb(235, 22, 37) 0%, rgba(255, 255, 255, 0) 100%);
+  }
+  .swiper-container {
+    width: 100%;
+    height: 9.1rem;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .quick-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 4rem;
+    margin-top: 0.5rem;
+    background-color: #fff;
+    .quick-nav-item {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 3.5rem;
+      margin: 0 2%;
+      .nav-icon {
+        width: 2rem;
+        height: 2rem;
+      }
+      .nav-title {
+        width: 100%;
+        text-align: center;
+        font-size: 0.7rem;
+        color: #7b7f82;
+        margin-top: 0.2rem;
+      }
+    }
+  }
+  .recommend-list {
+    margin-top: 0.5rem;
+    width: 100%;
+    background-color: #fff;
+    .title {
+      border-bottom: 1px solid #efefef;
+      font-size: 0.7rem;
+      text-align: center;
+      line-height: 1.6rem;
+    }
+    .title-red {
+      color: #F73B61!important;
+    }
+    .title-orange  {
+      color: #FE6719!important;
+    }
+    .bg-orange  {
+      color: #FE6719!important;
+    }
+    .title-green {
+      color: #5FC600!important;
+    }
+    .bg-green {
+      background: #5FC600!important;
+    }
+    .goods-level-1 {
+      display: flex;
+      width: 100%;
+      height: 7rem;
+      border-bottom: 1px solid #efefef;
+      .left {
+        flex: 1;
+        height: 100%;
+        border-right: 1px solid #efefef;
+        .goods-name {
+          width: 95%;
+          height: 1.5rem;
+          overflow: hidden;
+          padding: 0.5rem 0 0 0.2rem;
+          font-size: 0.7rem;
+          font-weight: 700;
+        }
+        .goods-desc {
+          display: flex;
+          align-items: center;
+          padding-left: 0.2rem;
+          .goods-text {
+            font-size: 0.6rem;
+            color: #CB385D;
+          }
+          .goods-price {
+            margin-left: 2rem;
+            padding: 0 0.2rem;
+            background: #F21D4F;
+            color: #FFFFFF;
+            font-size: 0.7rem;
+            text-align: center;
+            line-height: 1rem;
+            border-radius: 10px;
+          }
+        }
+        .goods-img {
+          margin-top: 0.2rem;
+          text-align: center;
+          img {
+            width: 7.5rem;
+            height: 3.7rem;
+          }
+        }
+      }
+      .right {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        height: 100%;
+        .right-items {
+          padding-left: 0.2rem;
+          display: flex;
+          flex: 1;
+          width: 100%;
+          .left-goods {
+            border-right: none;
+            width: 5.6rem;
+            //flex-shrink: 0;
+            .main-title {
+              padding-top: 0.5rem;
+              width: 95%;
+              height: 1.5rem;
+              overflow: hidden;
+              font-size: 0.7rem;
+              font-weight: bold;
+            }
+            .sub-title {
+              margin-top: 0.1rem;
+              font-size: 0.6rem;
+              color: #7b7f82;
+            }
+
+          }
+          .goods-right {
+            padding-top: 0.2rem;
+              img {
+                width: 3rem;
+                height: 3rem;
+              }
+          }
+        }
+        .top {
+          border-bottom: 1px solid #efefef;
+        }
+      }
+      .goods-level-1-3 {
+        text-align: center;
+        flex: 1;
+        height: 100%;
+        .level-1-3-title {
+          padding-top: 0.5rem;
+          overflow: hidden;
+          width: 98%;
+          height: 1.5rem;
+          font-size: 0.7rem;
+          font-weight: 700;
+        }
+
+      }
+      .goods-level-1-3-left {
+        border-right: 1px solid #efefef;
+      }
+    }
+    .goods-level-2 {
+      width: 100%;
+      display: flex;
+      .goods-level-2-item {
+        flex: 1;
+        flex-shrink: 0;
+        text-align: center;
+        border-right: 1px solid #efefef;
+        height: 7.6rem;
+        .level-2-title {
+          padding-top: 0.5rem;
+          width: 98%;
+          height: 1.5rem;
+          overflow: hidden;
+          font-size: 0.7rem ;
+          font-weight: 700;
+        }
+        .level-2-img {
+          margin-top: 0.2rem;
+          width: 3.8rem;
+          height: 3.8rem;
+          margin-bottom: 0;
+        }
+        .level-2-current-price{
+          margin-top: -0.2rem;
+          text-align: center;
+          color: #D32A4E;
+          font-size: 0.7rem;
+          //margin-top: 0.4rem;
+        }
+        .level-2-old-price {
+          color: #7b7f82;
+          font-size: 0.6rem;
+          margin-top: 0rem;
+          span {
+            text-decoration: line-through;
+          }
+        }
+      }
+      .goods-level-2-item:last-child {
+        border-right: none;
+      }
+    }
+  }
+}

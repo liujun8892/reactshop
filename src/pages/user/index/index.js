@@ -1,5 +1,5 @@
 import React from 'react';
-import Css from '../../../assets/css/home/index/index.css';
+import Css from '../../../assets/css/home/index/index.scss';
 export default class  UserComponent extends React.Component{
     componentDidMount(){
 
