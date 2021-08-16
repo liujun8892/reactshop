@@ -11,6 +11,8 @@ import {HashRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
 import config from "./assets/js/conf/config";
 import asyncComponents from './components/async/AsyncComponent';
 const HomeComponent=asyncComponents(()=>import('./pages/home/home/index'));
+const GoodsClassifyComponent=asyncComponents(()=>import('./pages/home/goods/classify'));
+const GoodsItemComponent=asyncComponents(()=>import('./pages/home/goods/item'));
 export default class RouterComponent extends React.Component{
     render(){
         return(
@@ -19,6 +21,8 @@ export default class RouterComponent extends React.Component{
                     <React.Fragment>
                         <Switch>
                             <Route  path={config.path + 'home'}  component={HomeComponent} ></Route>
+                            <Route  path={config.path + 'goods/classify'}  component={GoodsClassifyComponent} ></Route>
+                            <Route  path={config.path + 'goods/classify/items'}  component={GoodsItemComponent} ></Route>
                             <Redirect to={config.path  + 'home/index'}></Redirect>
                         </Switch>
                     </React.Fragment>

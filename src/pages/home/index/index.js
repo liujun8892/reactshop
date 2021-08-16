@@ -4,6 +4,7 @@ import Swiper from  '../../../assets/js/libs/swiper.min'
 import '../../../assets/css/common/swiper.min.css'
 import {request} from "../../../assets/js/libs/request";
 import {lazyImg} from "../../../assets/js/utils/util";
+import config from "../../../assets/js/conf/config";
 
 export default class  IndexComponent extends React.Component{
     constructor(props) {
@@ -30,6 +31,11 @@ export default class  IndexComponent extends React.Component{
         this.isScroll = false
         window.removeEventListener('scroll',this.handlePageScroll.bind(this))
     }
+    // 页面跳转
+    goPage(url) {
+        console.log(url)
+        this.props.history.push(config.path + url)
+    }
     // 获取轮播图数据
     getSwiperData() {
         request('/api/home/index/slide')
@@ -55,6 +61,8 @@ export default class  IndexComponent extends React.Component{
                 if(res.code === 200) {
                     this.setState({
                         quickNavs: res.data
+                    },() => {
+                        lazyImg()
                     })
                 }
             })
@@ -66,10 +74,10 @@ export default class  IndexComponent extends React.Component{
                 if(res.code === 200) {
                     this.setState({
                         mainGoodsList: res.data
+                    }, () => {
+                        lazyImg()
                     })
                 }
-            },() => {
-                lazyImg()
             })
     }
     // 获取商品推荐数据
@@ -80,10 +88,10 @@ export default class  IndexComponent extends React.Component{
                 if(res.code === 200) {
                     this.setState({
                         recommendGoodsList: res.data
+                    },() => {
+                        lazyImg()
                     })
                 }
-            },() => {
-                lazyImg()
             })
     }
     handlePageScroll() {
@@ -107,7 +115,7 @@ export default class  IndexComponent extends React.Component{
 
              {/*  头部导航栏  */}
                 <div className={this.state.isScroll ? 'header red-bg' : 'header'}>
-                    <div className="category"></div>
+                    <div className="category" onClick={this.goPage.bind(this,'goods/classify')}></div>
                     <div className="search-container">
                         <div className="search-btn"></div>
                         <div className="search-holder">请输入宝贝名称</div>
@@ -230,7 +238,7 @@ export default class  IndexComponent extends React.Component{
                 {this.state.recommendGoodsList.map((item,index) => (
                     <div className="goods-item" key={index}>
                         <div className="goods-content">
-                            <img className="goods-cover" data-echo={item.image} src={require("../../../assets/images/common/lazyImg.jpg")} alt={item.title}/>
+                            <img className="goods-cover" src={require("../../../assets/images/common/lazyImg.jpg")} data-echo={item.image}  alt={item.title}/>
                             <div className="goods-title">{item.title}</div>
                             <div className="goods-price">¥{item.price}.00</div>
                         </div>

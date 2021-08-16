@@ -24,7 +24,7 @@ export default class  HomeComponent extends React.Component{
     // 切换tab
     goPage(url) {
         console.log(url,'7777')
-        this.props.history.replace(url)
+        this.props.history.replace(config.path + url)
         let index = this.getTabIndex(url)
         this.setState({
             tabIndex: index
