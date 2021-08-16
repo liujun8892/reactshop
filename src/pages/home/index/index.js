@@ -2,20 +2,111 @@ import React from 'react';
 import '../../../assets/css/home/index/index.scss'
 import Swiper from  '../../../assets/js/libs/swiper.min'
 import '../../../assets/css/common/swiper.min.css'
+import {request} from "../../../assets/js/libs/request";
+import {lazyImg} from "../../../assets/js/utils/util";
+
 export default class  IndexComponent extends React.Component{
-    componentDidMount(){
-        new Swiper('.swiper-container', {
-            loop:true,
-            autoplay: 3000,//可选选项，自动滑动
-            pagination : '.swiper-pagination',
-            autoplayDisableOnInteraction : false
-        })
+    constructor(props) {
+        super(props);
+        this.state = {
+            // 滚动导航栏变色开关
+            isScroll: false,
+            aSwiper: [],
+            quickNavs: [],
+            mainGoodsList: [],
+            recommendGoodsList: []
+        }
+        // 离开页面不再有滚动变色效果
+        this.isScroll = true
     }
+    componentDidMount(){
+        this.getSwiperData()
+        this.getQuickNavs()
+        this.getMainGoodsList()
+        this.getRecommendGoodsList()
+        window.addEventListener('scroll', this.handlePageScroll.bind(this), false)
+    }
+    componentWillUnmount() {
+        this.isScroll = false
+        window.removeEventListener('scroll',this.handlePageScroll.bind(this))
+    }
+    // 获取轮播图数据
+    getSwiperData() {
+        request('/api/home/index/slide')
+            .then(res => {
+                if(res.code === 200) {
+                    this.setState({
+                        aSwiper: res.data
+                    }, () => {
+                        new Swiper('.swiper-container', {
+                            loop:true,
+                            autoplay: 3000,//可选选项，自动滑动
+                            pagination : '.swiper-pagination',
+                            autoplayDisableOnInteraction : false
+                        })
+                    })
+                }
+            })
+    }
+    // 获取快速导航栏数据
+    getQuickNavs() {
+        request('/api/home/index/nav')
+            .then(res => {
+                if(res.code === 200) {
+                    this.setState({
+                        quickNavs: res.data
+                    })
+                }
+            })
+    }
+    // 获取主商品数据
+    getMainGoodsList() {
+        request('/api/home/index/goodsLevel')
+            .then(res => {
+                if(res.code === 200) {
+                    this.setState({
+                        mainGoodsList: res.data
+                    })
+                }
+            },() => {
+                lazyImg()
+            })
+    }
+    // 获取商品推荐数据
+    getRecommendGoodsList() {
+        request('/api/home/index/recom')
+            .then(res => {
+                console.log(res,'获取商品推荐数据')
+                if(res.code === 200) {
+                    this.setState({
+                        recommendGoodsList: res.data
+                    })
+                }
+            },() => {
+                lazyImg()
+            })
+    }
+    handlePageScroll() {
+        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+        if(this.isScroll) {
+            if(scrollTop >= 80) {
+                this.setState({
+                    isScroll: true
+                })
+            } else  {
+                this.setState({
+                    isScroll: false
+                })
+            }
+        }
+    }
+
     render(){
         return(
             <div id={'homeIndex'}>
-             {/*  header  */}
-                <div className="header">
+
+             {/*  头部导航栏  */}
+                <div className={this.state.isScroll ? 'header red-bg' : 'header'}>
                     <div className="category"></div>
                     <div className="search-container">
                         <div className="search-btn"></div>
@@ -27,300 +118,126 @@ export default class  IndexComponent extends React.Component{
                         </div>
                     </div>
                 </div>
-            {/*  swiper  */}
+            {/*  轮播图  */}
                 <div className="swiper-container">
                     <div className="swiper-wrapper">
-                        <div className="swiper-slide">
-                            <img src="//vueshop.glbuys.com/uploadfiles/1484285302.jpg" alt=""/>
-                        </div>
-                        <div className="swiper-slide">
-                            <img src="//vueshop.glbuys.com/uploadfiles/1484285334.jpg" alt=""/>
-                        </div>
-                        <div className="swiper-slide">
-                            <img src="//vueshop.glbuys.com/uploadfiles/1524206455.jpg" alt=""/>
-                        </div>
+                        {this.state.aSwiper.map((item,index) => (
+                            <div className="swiper-slide" key={index}>
+                                <a href={item.webs} target='_blank' rel='noreferrer noopener'>
+                                    <img src={item.image} alt={item.title}/>
+                                </a>
+                            </div>
+                        ))}
                     </div>
                     <div className="swiper-pagination"></div>
                 </div>
-            {/*  quick-nav  */}
+
                 <div className="quick-nav">
-                    <div className="quick-nav-item">
-                        <img src="//vueshop.glbuys.com/uploadfiles/1484287695.png" alt="" className="nav-icon" />
-                        <span className="nav-title">潮流女装</span>
-                    </div>
-                    <div className="quick-nav-item">
-                        <img src="//vueshop.glbuys.com/uploadfiles/1484287842.png" alt="" className="nav-icon" />
-                        <span className="nav-title">品牌男装</span>
-                    </div>
-                    <div className="quick-nav-item">
-                        <img src="//vueshop.glbuys.com/uploadfiles/1484287842.png" alt="" className="nav-icon" />
-                        <span className="nav-title">电脑办公</span>
-                    </div>
-                    <div className="quick-nav-item">
-                        <img src="//vueshop.glbuys.com/uploadfiles/1484288118.png" alt="" className="nav-icon" />
-                        <span className="nav-title">手机数码</span>
-                    </div>
+                    {this.state.quickNavs.map((item,index) => (
+                        <div className="quick-nav-item" key={index}>
+                            <img src={item.image} alt={item.title} className="nav-icon" />
+                            <span className="nav-title">{item.title}</span>
+                        </div>
+                    ))}
+
                 </div>
-            {/*  recommend-list  */}
-                <div className="recommend-list">
-                    <div className="title title-red">
-                        —— 潮流女装 ——
-                    </div>
-                    <div className="goods-level-1">
-                        <div className="left">
-                            <div className="goods-name">
-                                高跟鞋女2018新款春季单鞋仙女甜美链子尖头防水台细跟女鞋一字带
-                            </div>
-                            <div className="goods-desc">
-                                <span className="goods-text">
-                                    精品打折
-                                </span>
-                                <span className="goods-price">
-                                    12.8元
-                                </span>
-                            </div>
-                            <div className="goods-img">
-                                <img src="//vueshop.glbuys.com/uploadfiles/1524556409.jpg" alt="" />
+                {/* 商品主列表数据*/}
+                {this.state.mainGoodsList.map((item,index) => (
+                    <div className="recommend-list" key={index}>
+                        <div className={index === 0 ? "title title-red" : index === 1 ? 'title title-orange': 'title title-green'} >
+                            —— {item.title} ——
+                        </div>
+                        <div className="goods-level-1">
+                            {index % 2 === 1? (
+                                item.items.slice(0,2).map((item2,index2) => (
+                                    <div className="goods-level-1-3 goods-level-1-3-left" key={index2}>
+                                        <div className="level-1-3-title">{item2.title}</div>
+                                        <div className="level-1-3-desc">火爆开售</div>
+                                        <img className="level-1-3-img" src={item2.image} alt={item.title} />
+                                    </div>
+                                ))
+                            ) : (
+                                <React.Fragment>
+                                    <div className="left">
+                                        <div className="goods-name">
+                                            {item.items[0].title}
+                                        </div>
+                                        <div className="goods-desc">
+                                    <span className="goods-text">
+                                        精品打折
+                                    </span>
+                                            <span className="goods-price">
+                                         {item.items[0].price}元
+                                    </span>
+                                        </div>
+                                        <div className="goods-img">
+                                            <img src={item.items[0].image} alt={item.items[0].title} />
+                                        </div>
+                                    </div>
+                                    <div className="right">
+                                        <div className="right-items top">
+                                            <div className="left-goods">
+                                                <div className="main-title">{item.items[1].title}</div>
+                                                <div className="sub-title">品质精挑</div>
+                                            </div>
+                                            <div className="goods-right">
+                                                <img src={item.items[1].image} alt={item.items[0].title} />
+                                            </div>
+                                        </div>
+                                        <div className="right-items">
+                                            <div className="left-goods">
+                                                <div className="main-title">{item.items[2].title}</div>
+                                                <div className="sub-title">品质精挑</div>
+                                            </div>
+                                            <div className="goods-right">
+                                                <img src={item.items[2].image} alt={item.items[2].title}/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </React.Fragment>
+                            )}
+                        </div>
+                        <div className="goods-level-2">
+                            {item.items.slice(index % 2 === 1 ? 2 : 3).map((item2,index2) => (
+                                <div className="goods-level-2-item" key={index2}>
+                                    <div className="level-2-title">
+                                        {item2.title}
+                                    </div>
+                                    <img className="level-2-img" src={item2.image} />
+                                    <div className="level-2-current-price">
+                                        ¥{item2.price}
+                                    </div>
+                                    <div className="level-2-old-price">
+                                        ¥ <span>{item2.price *2}</span>
+                                    </div>
 
-                            </div>
-                        </div>
-                        <div className="right">
-                            <div className="right-items top">
-                                <div className="left-goods">
-                                    <div className="main-title">欧美尖头蝴蝶结拖鞋女夏外穿2018新款绸缎面细跟凉拖半拖鞋穆勒鞋</div>
-                                    <div className="sub-title">品质精挑</div>
                                 </div>
-                                <div className="goods-right">
-                                    <img src="//vueshop.glbuys.com/uploadfiles/1524556315.jpg" alt=""/>
-                                </div>
-                            </div>
-                            <div className="right-items">
-                                <div className="left-goods">
-                                    <div className="main-title">老爹鞋女韩版ulzzang原宿百搭网鞋透气网面内增高运动鞋网鞋夏季</div>
-                                    <div className="sub-title">品质精挑</div>
-                                </div>
-                                <div className="goods-right">
-                                    <img src="//vueshop.glbuys.com/uploadfiles/1524556213.jpg" alt=""/>
-                                </div>
-                            </div>
+                            ))}
                         </div>
                     </div>
-                    <div className="goods-level-2">
-                        <div className="goods-level-2-item">
-                            <div className="level-2-title">
-                                小白鞋女2018春夏季新款韩版百搭平底学生原宿ulzzang帆布鞋板鞋
-                            </div>
-                            <img className="level-2-img" src="//vueshop.glbuys.com/uploadfiles/1524556119.jpg" />
-                            <div className="level-2-current-price">
-                                ¥288
-                            </div>
-                            <div className="level-2-old-price">
-                                ¥ <span>567</span>
-                            </div>
-
-                        </div>
-                        <div className="goods-level-2-item">
-                            <div className="level-2-title">
-                                雪兰黛2018春季新款高跟鞋尖头细跟性感鞋子女韩版透气纱网女单鞋
-                            </div>
-                            <img className="level-2-img" src="//vueshop.glbuys.com/uploadfiles/1524556026.jpg" />
-                            <div className="level-2-current-price">
-                                ¥280
-                            </div>
-                            <div className="level-2-old-price">
-                                ¥ <span>560</span>
-                            </div>
-                        </div>
-                        <div className="goods-level-2-item">
-                            <div className="level-2-title">
-                                2018夏季新款韩版百搭高跟鞋女显瘦细跟黑色工作鞋金属扣露趾凉鞋
-                            </div>
-                            <img className="level-2-img" src="//vueshop.glbuys.com/uploadfiles/1524555954.jpg" />
-                            <div className="level-2-current-price">
-                                ¥300
-                            </div>
-                            <div className="level-2-old-price">
-                                ¥ <span>600</span>
-                            </div>
-                        </div>
-                        <div className="goods-level-2-item">
-                            <div className="level-2-title">
-                                2018新款韩版高跟鞋女凉鞋夏细跟尖头一字扣猫跟鞋包头百搭磨砂皮
-                            </div>
-                            <img className="level-2-img" src="//vueshop.glbuys.com/uploadfiles/1524555891.jpg" />
-                            <div className="level-2-current-price">
-                                ¥200
-                            </div>
-                            <div className="level-2-old-price">
-                                ¥ <span>400</span>
-                            </div>
-                        </div>
-                    </div>
+                ))}
+            <div className="goods-recommend-title">
+                <div className="line"></div>
+                <div className="content">
+                    <div className="love-icon"></div>
+                    <div className="love-text">为您推荐</div>
                 </div>
-                <div className="recommend-list">
-                    <div className="title title-orange">
-                        —— 品牌男装 ——
-                    </div>
-                    <div className="goods-level-1">
-                       <div className="goods-level-1-3 goods-level-1-3-left">
-                            <div className="level-1-3-title">新款短袖男士夏季3d立体图案体恤猴子搞怪大猩猩个性t恤大码衣服</div>
-                            <div className="level-1-3-desc">火爆开售</div>
-                            <img className="level-1-3-title" src="//vueshop.glbuys.com/uploadfiles/1524568819.jpg" />
-                       </div>
-                        <div className="goods-level-1-3">
-                            <div className="level-1-3-title">成人五分裤海边度假短裤男士潮流沙滩库子2018新款大裤衩夏装悠闲</div>
-                            <div className="level-1-3-desc">火爆开售</div>
-                            <img className="level-1-3-title" src="//vueshop.glbuys.com/uploadfiles/1524567419.jpg" />
-                        </div>
-                    </div>
-                    <div className="goods-level-2">
-                        <div className="goods-level-2-item">
-                            <div className="level-2-title">
-                                小白鞋女2018春夏季新款韩版百搭平底学生原宿ulzzang帆布鞋板鞋
-                            </div>
-                            <img className="level-2-img" src="//vueshop.glbuys.com/uploadfiles/1524556119.jpg" />
-                            <div className="level-2-current-price">
-                                ¥288
-                            </div>
-                            <div className="level-2-old-price">
-                                ¥ <span>567</span>
-                            </div>
-
-                        </div>
-                        <div className="goods-level-2-item">
-                            <div className="level-2-title">
-                                雪兰黛2018春季新款高跟鞋尖头细跟性感鞋子女韩版透气纱网女单鞋
-                            </div>
-                            <img className="level-2-img" src="//vueshop.glbuys.com/uploadfiles/1524556026.jpg" />
-                            <div className="level-2-current-price">
-                                ¥280
-                            </div>
-                            <div className="level-2-old-price">
-                                ¥ <span>560</span>
-                            </div>
-                        </div>
-                        <div className="goods-level-2-item">
-                            <div className="level-2-title">
-                                2018夏季新款韩版百搭高跟鞋女显瘦细跟黑色工作鞋金属扣露趾凉鞋
-                            </div>
-                            <img className="level-2-img" src="//vueshop.glbuys.com/uploadfiles/1524555954.jpg" />
-                            <div className="level-2-current-price">
-                                ¥300
-                            </div>
-                            <div className="level-2-old-price">
-                                ¥ <span>600</span>
-                            </div>
-                        </div>
-                        <div className="goods-level-2-item">
-                            <div className="level-2-title">
-                                2018新款韩版高跟鞋女凉鞋夏细跟尖头一字扣猫跟鞋包头百搭磨砂皮
-                            </div>
-                            <img className="level-2-img" src="//vueshop.glbuys.com/uploadfiles/1524555891.jpg" />
-                            <div className="level-2-current-price">
-                                ¥200
-                            </div>
-                            <div className="level-2-old-price">
-                                ¥ <span>400</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="recommend-list">
-                    <div className="title title-green">
-                        —— 电脑办公 ——
-                    </div>
-                    <div className="goods-level-1">
-                        <div className="left">
-                            <div className="goods-name">
-                                酷睿i5四核GTX1060独显台式机组装电脑主机整机 绝地求生吃鸡游戏
-                            </div>
-                            <div className="goods-desc">
-                                <span className="goods-text">
-                                    精品打折
-                                </span>
-                                <span className="goods-price bg-green">
-                                    4599元
-                                </span>
-                            </div>
-                            <div className="goods-img">
-                                <img src="//vueshop.glbuys.com/uploadfiles/1524561138.jpg" alt="" />
-
-                            </div>
-                        </div>
-                        <div className="right">
-                            <div className="right-items top">
-                                <div className="left-goods">
-                                    <div className="main-title">金属鼠标垫个性定制LOGO大号高贵时尚航空级铝合金圆形游戏办公批</div>
-                                    <div className="sub-title">品质精挑</div>
-                                </div>
-                                <div className="goods-right">
-                                    <img src="//vueshop.glbuys.com/uploadfiles/1524559781.png" alt=""/>
-                                </div>
-                            </div>
-                            <div className="right-items">
-                                <div className="left-goods">
-                                    <div className="main-title">微软ARC TOUCH无线蓝牙鼠标 苹果MAC笔记本创意超薄便携时尚折叠</div>
-                                    <div className="sub-title">品质精挑</div>
-                                </div>
-                                <div className="goods-right">
-                                    <img src="//vueshop.glbuys.com/uploadfiles/1524559415.png" alt=""/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="goods-level-2">
-                        <div className="goods-level-2-item">
-                            <div className="level-2-title">
-                                美国tomtoc13/15寸苹果笔记本macbook时尚商务手提男女电脑包纤薄
-                            </div>
-                            <img className="level-2-img" src="//vueshop.glbuys.com/uploadfiles/1524558854.png" />
-                            <div className="level-2-current-price">
-                                ¥149
-                            </div>
-                            <div className="level-2-old-price">
-                                ¥ <span>298</span>
-                            </div>
-
-                        </div>
-                        <div className="goods-level-2-item">
-                            <div className="level-2-title">
-                                以诺双肩电脑包13.3/14/15.6寸男小米苹果电脑背包商务笔记本包女
-                            </div>
-                            <img className="level-2-img" src="//vueshop.glbuys.com/uploadfiles/1524558775.jpg" />
-                            <div className="level-2-current-price">
-                                ¥129
-                            </div>
-                            <div className="level-2-old-price">
-                                ¥ <span>256</span>
-                            </div>
-                        </div>
-                        <div className="goods-level-2-item">
-                            <div className="level-2-title">
-                                联想华硕神舟笔记本贴膜15.6 戴尔宏基HP外壳保护膜电脑贴纸14寸
-                            </div>
-                            <img className="level-2-img" src="//vueshop.glbuys.com/uploadfiles/1524558607.jpg" />
-                            <div className="level-2-current-price">
-                                ¥28
-                            </div>
-                            <div className="level-2-old-price">
-                                ¥ <span>56</span>
-                            </div>
-                        </div>
-                        <div className="goods-level-2-item">
-                            <div className="level-2-title">
-                                ETS六代 笔记本抽风式散热器侧吸式戴尔联想电脑风扇17机14寸15.6
-                            </div>
-                            <img className="level-2-img" src="//vueshop.glbuys.com/uploadfiles/1524558535.jpg" />
-                            <div className="level-2-current-price">
-                                ¥108
-                            </div>
-                            <div className="level-2-old-price">
-                                ¥ <span>216</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div className="line"></div>
             </div>
+
+
+            <div className="goods-list">
+                {this.state.recommendGoodsList.map((item,index) => (
+                    <div className="goods-item" key={index}>
+                        <div className="goods-content">
+                            <img className="goods-cover" data-echo={item.image} src={require("../../../assets/images/common/lazyImg.jpg")} alt={item.title}/>
+                            <div className="goods-title">{item.title}</div>
+                            <div className="goods-price">¥{item.price}.00</div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+         </div>
         );
     }
 }
